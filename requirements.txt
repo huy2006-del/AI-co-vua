@@ -1,4 +1,0 @@
-chess
-flask
-pytest
-matplotlib
