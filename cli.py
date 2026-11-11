@@ -3,7 +3,7 @@
 Nhập nước đi dạng UCI (e2e4) hoặc SAN (Nf3). 'quit' để thoát."""
 import argparse
 import chess
-from engine.api import search, ALGOS
+from engine.search import search, ALGOS
 
 
 def main():
