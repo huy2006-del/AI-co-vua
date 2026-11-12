@@ -146,3 +146,15 @@ AI-co-vua-main/
 - **FE2 – Đình Chí:** cấu hình, thống kê, CLI và đóng gói chạy.
 
 Theo quy trình nhóm đã thống nhất, mỗi người làm trên nhánh riêng `feature/<ten>-<viec>`, tạo pull request nhỏ vào `dev`; không push thẳng vào `main`. Chạy test liên quan và review chéo trước khi hợp nhất.
+
+## 8.Chạy Stockfish trên Windows
+
+Tải bản Windows phù hợp với máy và giải nén. [Trang tải Stockfish](https://stockfishchess.org/download/)
+
+Mở PowerShell tại thư mục gốc của dự án. Thay đường dẫn mẫu bằng vị trí file Stockfish `.exe` trên máy rồi chạy lệnh sau.
+
+```powershell
+.\.venv\Scripts\python.exe -m backend.benchmark.vs_stockfish --stockfish "C:\duong-dan\stockfish.exe" --depth 6
+```
+
+Khi kết nối thành công, Terminal hiện `Stockfish OK`, nước đi và điểm phân tích.
