@@ -1,0 +1,13 @@
+﻿position,fen,algorithm,evaluation,depth,completed_depth,node_limit,time_limit,limited,move,nodes,seconds,score_white_cp,stockfish_move,matches_stockfish,stockfish_loss_cp
+Khai cuộc,rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1,alphabeta_ordered,material,2,2,20000,2.0,False,Nh3,81,0.011347,0,,,
+Khai cuộc,rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1,alphabeta_ordered,material,3,3,20000,2.0,False,Nh3,662,0.061291,0,,,
+Khai cuộc,rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1,alphabeta_ordered,position,2,2,20000,2.0,False,Nf3,109,0.012986,0,,,
+Khai cuộc,rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1,alphabeta_ordered,position,3,3,20000,2.0,False,Nf3,976,0.099988,24,,,
+Trung cuộc,r1bq1rk1/ppp2ppp/2np1n2/2b1p3/2B1P3/2NP1N2/PPP2PPP/R1BQ1RK1 w - - 2 8,alphabeta_ordered,material,2,2,20000,2.0,False,Bb5,186,0.014353,-100,,,
+Trung cuộc,r1bq1rk1/ppp2ppp/2np1n2/2b1p3/2B1P3/2NP1N2/PPP2PPP/R1BQ1RK1 w - - 2 8,alphabeta_ordered,material,3,3,20000,2.0,False,Bg5,2559,0.201377,230,,,
+Trung cuộc,r1bq1rk1/ppp2ppp/2np1n2/2b1p3/2B1P3/2NP1N2/PPP2PPP/R1BQ1RK1 w - - 2 8,alphabeta_ordered,position,2,2,20000,2.0,False,Bg5,258,0.02737,-130,,,
+Trung cuộc,r1bq1rk1/ppp2ppp/2np1n2/2b1p3/2B1P3/2NP1N2/PPP2PPP/R1BQ1RK1 w - - 2 8,alphabeta_ordered,position,3,3,20000,2.0,False,Bg5,2783,0.285682,274,,,
+Tàn cuộc,8/2k5/3p4/3P4/4K3/7P/8/8 w - - 0 1,alphabeta_ordered,material,2,2,20000,2.0,False,Kf5,28,0.000826,100,,,
+Tàn cuộc,8/2k5/3p4/3P4/4K3/7P/8/8 w - - 0 1,alphabeta_ordered,material,3,3,20000,2.0,False,Kf5,109,0.003074,100,,,
+Tàn cuộc,8/2k5/3p4/3P4/4K3/7P/8/8 w - - 0 1,alphabeta_ordered,position,2,2,20000,2.0,False,h4,33,0.006988,138,,,
+Tàn cuộc,8/2k5/3p4/3P4/4K3/7P/8/8 w - - 0 1,alphabeta_ordered,position,3,3,20000,2.0,False,h4,188,0.008991,144,,,

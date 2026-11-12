@@ -1,0 +1,5 @@
+python-chess>=1.10
+pygame>=2.5
+pandas>=2.0
+matplotlib>=3.7
+pytest>=7.0
