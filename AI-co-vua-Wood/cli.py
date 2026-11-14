@@ -1,41 +1,84 @@
-"""CLI: chơi người vs máy bằng dòng lệnh.
-   python cli.py --algo alphabeta_ordered --depth 3 --color white
-Nhập nước đi dạng UCI (e2e4) hoặc SAN (Nf3). 'quit' để thoát."""
+"""CLI: Nguoi choi vs AI."""
+
 import argparse
+import time
 import chess
-from backend.engine.api import search, ALGOS
+
+from engine.search import search, ALGOS
+from game.controller import GameController
+from game.config import GameConfig
 
 
 def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--algo", choices=ALGOS, default="alphabeta_ordered")
-    ap.add_argument("--depth", type=int, default=3)
-    ap.add_argument("--color", choices=["white", "black"], default="white")
-    a = ap.parse_args()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--algo", choices=list(ALGOS.keys()),
+                        default="alphabeta_ordered")
+    parser.add_argument("--depth", type=int, default=3)
+    parser.add_argument("--color", choices=["white", "black"],
+                        default="white")
 
-    human = chess.WHITE if a.color == "white" else chess.BLACK
-    board = chess.Board()
+    args = parser.parse_args()
+
+    if args.depth < 1 or args.depth > 5:
+        parser.error("Depth phai tu 1 den 5.")
+
+    config = GameConfig(
+        ai_depth=args.depth,
+        ai_algorithm=args.algo,
+        player_color=args.color
+    )
+
+    controller = GameController(config)
+    board = controller.board_state.board
+
+    human = chess.WHITE if args.color == "white" else chess.BLACK
+
     while not board.is_game_over():
-        print("\n" + str(board))
+        print("\n", board)
+        print("Luot:", "Trang" if board.turn else "Den")
+
         if board.turn == human:
-            text = input("Nước của bạn: ").strip()
-            if text == "quit":
+            text = input("Nuoc di SAN/UCI, hoac quit: ").strip()
+
+            if text.lower() == "quit":
+                print("Da thoat game.")
                 return
+
             try:
-                try:
-                    move = board.parse_san(text)
-                except ValueError:
-                    move = board.parse_uci(text)
-            except ValueError:
-                print("Nước đi không hợp lệ.")
+                controller.play_human_move(text)
+            except Exception as error:
+                print("Nuoc di khong hop le:", error)
                 continue
+
         else:
-            r = search(board, a.algo, a.depth)
-            move = r.move
-            print(f"Máy đi {board.san(move)} | điểm {r.score} | node {r.stats.nodes} "
-                  f"| {r.stats.elapsed:.2f}s")
-        board.push(move)
-    print("\nKết thúc:", board.result(), board.outcome().termination.name)
+            print("May dang nghi...")
+            start = time.perf_counter()
+
+            move = search(board, depth=args.depth)
+
+            elapsed = time.perf_counter() - start
+
+            if move is None or move not in board.legal_moves:
+                print("AI khong tra ve nuoc di hop le.")
+                return
+
+            san_move = board.san(move)
+            controller.board_state.push(move)
+            controller.record.add_move(san_move)
+
+            print("May di:", san_move)
+            print("===== THONG KE AI =====")
+            print("Time:", f"{elapsed:.3f}s")
+            print("Depth:", args.depth)
+            print("Nodes: Chua duoc Backend cung cap")
+            print("Cutoffs: Chua duoc Backend cung cap")
+
+    print("\n", board)
+    print("Ket thuc:", board.result())
+
+    outcome = board.outcome()
+    if outcome:
+        print("Ly do:", outcome.termination.name)
 
 
 if __name__ == "__main__":
