@@ -13,7 +13,7 @@ from time import perf_counter_ns
 
 import chess
 
-from engine.evaluation import MaterialPstEvaluator
+from ..engine.evaluation import MaterialPstEvaluator
 
 from .positions import Position, generate_positions, get_fixed_positions
 from .store import ExperimentConfig, ExperimentRecord, ResultStore

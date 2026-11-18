@@ -10,6 +10,7 @@ class SearchOptions:
     transposition_table: bool = False
     quiescence: bool = False
     time_limit: float | None = None
+    node_limit: int | None = None
     max_quiescence_depth: int = 8
     tt_size: int = 200_000
     check_interval: int = 256
@@ -17,6 +18,8 @@ class SearchOptions:
     def __post_init__(self) -> None:
         if self.time_limit is not None and self.time_limit <= 0:
             raise ValueError("time_limit phải lớn hơn 0")
+        if self.node_limit is not None and self.node_limit < 1:
+            raise ValueError("node_limit phải từ 1 trở lên")
         if self.max_quiescence_depth < 0 or self.tt_size < 1 or self.check_interval < 1:
             raise ValueError("Giới hạn tìm kiếm không hợp lệ")
 

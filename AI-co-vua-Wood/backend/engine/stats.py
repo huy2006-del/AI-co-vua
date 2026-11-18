@@ -15,8 +15,13 @@ class SearchStats:
     expanded_nodes: int = 0
     elapsed: float = 0.0
     depth_reached: int = 0
+    limited: bool = False
     nodes_per_depth: list[int] = field(default_factory=list)
     cutoffs_per_depth: list[int] = field(default_factory=list)
+
+    @property
+    def completed_depth(self) -> int:
+        return self.depth_reached
 
     @property
     def avg_branching(self) -> float:
@@ -42,6 +47,8 @@ class SearchContext:
             self.stats.nodes_per_depth.append(0)
             self.stats.cutoffs_per_depth.append(0)
         self.stats.nodes_per_depth[ply] += 1
+        if self.options.node_limit is not None and self.stats.nodes >= self.options.node_limit:
+            raise SearchStopped
         if self.stats.nodes % self.options.check_interval == 0:
             if self.cancel_event is not None and self.cancel_event.is_set():
                 raise SearchStopped

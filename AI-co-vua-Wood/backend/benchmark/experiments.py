@@ -114,6 +114,10 @@ def engine_move(board, algo, depth, evaluation, seconds, nodes):
     from backend.engine.api import SearchResult, SearchStats
     info = played.info
     score = info.get("score")
-    return SearchResult(played.move, score.white().score(mate_score=100_000) if score else 0,
-                        SearchStats(info.get("nodes", 0), perf_counter() - started,
-                                    info.get("depth", 0), False))
+    return SearchResult(
+        played.move,
+        score.white().score(mate_score=100_000) if score else 0,
+        info.get("depth", 0),
+        SearchStats(nodes=info.get("nodes", 0), elapsed=perf_counter() - started,
+                    depth_reached=info.get("depth", 0)),
+    )

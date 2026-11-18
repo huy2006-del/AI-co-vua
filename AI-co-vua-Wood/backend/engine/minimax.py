@@ -29,7 +29,9 @@ class MinimaxSearch(SearchAlgorithm):
         ctx = SearchContext(options, cancel_event)
         best_move, best_score = None, 0
         ctx.visit(0)
-        depths = range(1, depth + 1) if options.iterative_deepening or options.time_limit else (depth,)
+        depths = range(1, depth + 1) if (
+            options.iterative_deepening or options.time_limit or options.node_limit
+        ) else (depth,)
         try:
             for current_depth in depths:
                 iteration_move, iteration_score = None, 0
@@ -47,7 +49,7 @@ class MinimaxSearch(SearchAlgorithm):
                 best_move, best_score = iteration_move, iteration_score
                 ctx.stats.depth_reached = current_depth
         except SearchStopped:
-            pass
+            ctx.stats.limited = True
         if best_move is None:
             best_score = evaluator.evaluate(board)
         ctx.finish()

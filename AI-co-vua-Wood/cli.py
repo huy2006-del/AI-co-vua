@@ -4,14 +4,14 @@ import argparse
 import time
 import chess
 
-from engine.search import search, ALGOS
-from game.controller import GameController
-from game.config import GameConfig
+from backend.engine.api import search, ALGOS
+from backend.game.controller import GameController
+from backend.game.config import GameConfig
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--algo", choices=list(ALGOS.keys()),
+    parser.add_argument("--algo", choices=list(ALGOS),
                         default="alphabeta_ordered")
     parser.add_argument("--depth", type=int, default=3)
     parser.add_argument("--color", choices=["white", "black"],
@@ -54,7 +54,8 @@ def main():
             print("May dang nghi...")
             start = time.perf_counter()
 
-            move = search(board, depth=args.depth)
+            result = search(board, args.algo, args.depth, time_limit=config.time_limit)
+            move = result.move
 
             elapsed = time.perf_counter() - start
 
@@ -70,8 +71,8 @@ def main():
             print("===== THONG KE AI =====")
             print("Time:", f"{elapsed:.3f}s")
             print("Depth:", args.depth)
-            print("Nodes: Chua duoc Backend cung cap")
-            print("Cutoffs: Chua duoc Backend cung cap")
+            print("Nodes:", result.stats.nodes)
+            print("Cutoffs:", result.stats.cutoffs)
 
     print("\n", board)
     print("Ket thuc:", board.result())

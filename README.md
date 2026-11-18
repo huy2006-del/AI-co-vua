@@ -1,115 +1,109 @@
-﻿# Dự án AI cờ vua
+# Dự án AI cờ vua
 
-Dự án gồm engine Minimax/Alpha-Beta tự xây dựng, giao diện chơi trên web, giao diện desktop Pygame và các công cụ benchmark/đối chiếu Stockfish.
+Dự án gồm engine cờ vua Minimax/Alpha-Beta, giao diện desktop dùng Pygame và các công cụ benchmark. Mã nguồn ứng dụng nằm trong `AI-co-vua-Wood`; `requirements.txt` và các script chạy nằm ở thư mục gốc.
 
-## Chạy web trên Windows
+> Các lệnh dưới đây giả định terminal đang mở tại thư mục chứa file README này. Không cần dùng đường dẫn tuyệt đối trên máy của một thành viên cụ thể.
 
-Các lệnh dưới đây dành cho PowerShell. Chạy từ thư mục `AI-co-vua-Wood`:
+## Yêu cầu
 
-```powershell
-cd "D:\Trí tuệ nhân tạo\AI-co-vua1\AI-co-vua-Wood"
-```
+- Python 3.10 trở lên.
+- Windows, macOS hoặc Linux. Giao diện cần môi trường desktop có thể mở cửa sổ Pygame.
+- Stockfish chỉ cần cho các chế độ benchmark/đấu engine có đối thủ Stockfish; chơi với engine tích hợp không cần Stockfish.
 
-### Tạo môi trường Python lần đầu
+## Cài đặt lần đầu
 
-Dự án dùng Python 3.14 được cài qua Python Launcher (`py`). Tạo môi trường ảo trong thư mục dự án:
-
-```powershell
-py -3.14 -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-```
-
-Nếu PowerShell báo không cho chạy script, chỉ mở quyền trong terminal hiện tại rồi kích hoạt lại:
+### Windows PowerShell
 
 ```powershell
-Set-ExecutionPolicy -Scope Process Bypass
-.\.venv\Scripts\Activate.ps1
+py -3 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-### Cài thư viện
+### macOS / Linux
 
-Để chạy web, chỉ cần `python-chess`:
+```bash
+python3 -m venv .venv
+.venv/bin/python -m pip install --upgrade pip
+.venv/bin/python -m pip install -r requirements.txt
+```
+
+Mỗi người trong nhóm tạo môi trường `.venv` riêng trên máy của mình. Không sao chép thư mục `.venv` từ máy khác; tạo lại bằng các lệnh trên để Python cài đúng thư viện cho hệ điều hành đó.
+
+## Chạy ứng dụng
+
+Cách nhanh nhất trên Windows là chạy `run.bat` ở thư mục gốc. Script tự tạo `.venv` nếu thiếu, cài dependencies nếu chưa có, rồi khởi động ứng dụng. Có thể truyền các tham số của ứng dụng sau tên file, ví dụ `run.bat --depth 2`. Thành viên không cần kích hoạt `.venv` bằng tay.
+
+Trên macOS/Linux, chạy `bash run.sh` ở thư mục gốc; script cũng tự tạo môi trường và cài dependencies khi cần.
+
+### Windows PowerShell
 
 ```powershell
-python -m pip install "python-chess>=1.999,<2.0"
+Set-Location AI-co-vua-Wood
+& ..\.venv\Scripts\python.exe -m frontend.gui.app
 ```
 
-Để cài thêm thư viện giao diện desktop và benchmark:
+Các lệnh trực tiếp ở trên luôn dùng Python trong `.venv`, kể cả khi terminal chưa hiện tiền tố `(.venv)`. Không dùng `python -m frontend.gui.app` với Python hệ thống nếu chưa cài dependencies vào Python đó.
+
+### macOS / Linux
+
+```bash
+cd AI-co-vua-Wood
+../.venv/bin/python -m frontend.gui.app
+```
+
+Hoặc chạy `bash run.sh` từ thư mục gốc.
+
+Trong bàn cờ, bấm quân cần đi rồi bấm ô đích. Mặc định người chơi cầm Trắng và engine tích hợp cầm Đen. Có thể chọn màu và độ sâu bằng tham số:
 
 ```powershell
-python -m pip install -r ..\requirements.txt
+& ..\.venv\Scripts\python.exe -m frontend.gui.app --color black --depth 3
 ```
 
-`requirements.txt` dùng `pygame-ce` thay cho `pygame` để tránh pip cố biên dịch Pygame từ mã nguồn trên Python mới.
-
-### Khởi chạy web
+Các tham số `--color` nhận `white` hoặc `black`; `--depth` nhận từ 1 đến 4. Để chạy với đối thủ giả lập dùng kiểm tra giao diện:
 
 ```powershell
-python web_app.py
+& ..\.venv\Scripts\python.exe -m frontend.gui.app --opponent fake
 ```
 
-Mở http://127.0.0.1:8000 trong trình duyệt. Dừng máy chủ bằng `Ctrl+C` trong terminal.
+Ván cờ dùng luật của `python-chess`: nước đi hợp lệ, nhập thành, bắt tốt qua đường, phong cấp, chiếu hết và hòa được xử lý theo luật. Khi ván kết thúc, trạng thái hiển thị kết quả; dùng **Ván mới** để chơi lại.
 
-### Các lần chạy sau
+## Chạy benchmark
 
-Mở PowerShell mới và chạy:
+Từ thư mục gốc, vào thư mục ứng dụng rồi chạy:
 
 ```powershell
-cd "D:\Trí tuệ nhân tạo\AI-co-vua1\AI-co-vua-Wood"
-.\.venv\Scripts\Activate.ps1
-python web_app.py
+Set-Location AI-co-vua-Wood
+& ..\.venv\Scripts\python.exe -m backend.benchmark.compare_algos --per-phase 10 --max-depth 3
 ```
+
+Trên macOS/Linux, thay lệnh Python bằng `../.venv/bin/python`. Kết quả được tạo trong `AI-co-vua-Wood/results/benchmark`, theo từng lần chạy và có CSV cùng metadata cấu hình để đối chiếu sau này. Giao diện desktop cũng có màn hình thực nghiệm và chức năng xuất dữ liệu/đồ thị.
 
 ## Stockfish (tùy chọn)
 
-Web app hiện sử dụng engine Python tích hợp; không cần Stockfish để chơi. Các công cụ benchmark có thể dùng Stockfish đã cài tại:
-
-```text
-D:\Trí tuệ nhân tạo\stockfish-windows-x86-64-universal\stockfish\stockfish-windows-x86-64-universal.exe
-```
-
-Đặt biến môi trường trong PowerShell hiện tại trước khi chạy benchmark:
+Cài Stockfish riêng và đặt biến `STOCKFISH_PATH` trỏ tới file thực thi. Ví dụ PowerShell:
 
 ```powershell
-$env:STOCKFISH_PATH = "D:\Trí tuệ nhân tạo\stockfish-windows-x86-64-universal\stockfish\stockfish-windows-x86-64-universal.exe"
-Test-Path $env:STOCKFISH_PATH
+$env:STOCKFISH_PATH = "C:\duong-dan\stockfish.exe"
 ```
 
-Kết quả `True` xác nhận đúng đường dẫn. Để cấu hình lâu dài cho tài khoản Windows:
+macOS/Linux:
 
-```powershell
-[Environment]::SetEnvironmentVariable("STOCKFISH_PATH", "D:\Trí tuệ nhân tạo\stockfish-windows-x86-64-universal\stockfish\stockfish-windows-x86-64-universal.exe", "User")
+```bash
+export STOCKFISH_PATH="/duong-dan/stockfish"
 ```
 
-Sau khi đặt biến lâu dài, mở terminal mới để nhận cấu hình.
+Biến môi trường chỉ áp dụng cho terminal hiện tại. Nếu bỏ qua cấu hình này, các chức năng dùng Stockfish sẽ không chạy; chơi với engine tích hợp vẫn hoạt động.
 
-## Chạy kiểm tra
+## Kết quả BE2 lưu trong repo
 
-Cài dependencies đầy đủ theo mục trên, sau đó từ thư mục gốc repository:
-
-```powershell
-cd ..
-python -m pytest -q
-```
+Các log, CSV, metadata và đồ thị BE2 được lưu trong `AI-co-vua-Wood/results/archive/be2-full-20261115-021529-511`. Đây là dữ liệu tham chiếu từ lần chạy trước, không phải mã nguồn hay dữ liệu đầu vào bắt buộc. Metadata ghi nhận 30 thế cờ, độ sâu 1–3 và 180 bản ghi so sánh. Log báo 17 kiểm tra đã qua; phần ablation bị bỏ qua vì thiếu hoặc rỗng trong checkout dùng cho lần chạy đó.
 
 ## Khắc phục lỗi thường gặp
 
-- **Không tạo được `.venv` hoặc báo không ghi được `python.exe`:** đóng terminal/app đang sử dụng môi trường ảo. Nếu `.venv` cũ hỏng và xóa được, xóa đúng thư mục `AI-co-vua-Wood\.venv` rồi chạy lại lệnh tạo venv. Nếu Windows vẫn khóa file, khởi động lại máy rồi tạo lại trước khi mở IDE.
-- **Pip báo lỗi khi cài Pygame:** nâng pip trong môi trường ảo bằng `python -m pip install --upgrade pip`, rồi cài lại. Chạy web không cần Pygame; chỉ cần cài `python-chess` theo hướng dẫn tối thiểu.
-- **`No module named chess`:** xác nhận đã kích hoạt `.venv` (đầu dòng terminal có `(.venv)`), sau đó chạy `python -m pip install "python-chess>=1.999,<2.0"`.
-- **Cổng 8000 đang được dùng:** đóng tiến trình web trước đó hoặc đổi `8000` trong dòng `ThreadingHTTPServer(("127.0.0.1",8000),Handler)` của `web_app.py`.
-
-## Cấu trúc chính
-
-```text
-AI-co-vua1/
-├── AI-co-vua-Wood/
-│   ├── backend/engine/       # Tìm kiếm và đánh giá thế cờ
-│   ├── backend/game/         # Luật chơi và trạng thái ván
-│   ├── backend/benchmark/    # Đo đạc và đối chiếu Stockfish
-│   ├── frontend/gui/         # Giao diện desktop
-│   └── web_app.py            # Giao diện trình duyệt
-├── tests/
-└── requirements.txt
-```
+- **`No module named chess` hoặc `No module named pygame`:** cài `requirements.txt` bằng đúng Python trong `.venv` như hướng dẫn cài đặt.
+- **`No module named backend` hoặc `No module named frontend`:** trước khi chạy module, chuyển vào `AI-co-vua-Wood`.
+- **PowerShell không cho kích hoạt `.venv`:** không cần kích hoạt môi trường; dùng trực tiếp `& ..\.venv\Scripts\python.exe` như các lệnh trên.
+- **Lỗi lịch sử kiểu `not enough values to unpack`:** thường do các file lấy từ những phiên bản khác nhau. Cập nhật đồng bộ toàn bộ repo để giao diện và controller dùng cùng định dạng lịch sử.
+- **`web_app.py` không tìm thấy:** checkout hiện tại không có ứng dụng web. Chạy giao diện desktop bằng `python -m frontend.gui.app` như hướng dẫn; lệnh web trong tài liệu cũ không áp dụng.
+- **Stockfish không tìm thấy:** kiểm tra đường dẫn trong `STOCKFISH_PATH`. Engine cờ vua tích hợp không phụ thuộc Stockfish.

@@ -49,7 +49,7 @@ class AlphaBetaSearch(SearchAlgorithm):
                 if ctx.completed_score >= MATE_SCORE - current_depth:
                     break
         except SearchStopped:
-            pass
+            ctx.stats.limited = True
         ctx.finish()
         return _result(ctx.completed_best, ctx.completed_score, ctx.stats.depth_reached, ctx)
 

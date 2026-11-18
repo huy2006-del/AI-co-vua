@@ -18,6 +18,19 @@ class Evaluator:
         raise NotImplementedError("Phải cài đặt phương thức evaluate trong lớp con.")
 
 
+class MaterialEvaluator(Evaluator):
+    """Đánh giá chỉ dựa trên tổng giá trị quân cờ."""
+    def evaluate(self, board: chess.Board, ply: int = 0) -> float:
+        if board.is_checkmate():
+            return -MATE_SCORE if board.turn == chess.WHITE else MATE_SCORE
+        if board.is_stalemate() or board.is_insufficient_material():
+            return 0.0
+        return float(sum(
+            PIECE_VALUES[piece.piece_type] * (1 if piece.color == chess.WHITE else -1)
+            for piece in board.piece_map().values()
+        ))
+
+
 class MaterialPstEvaluator(Evaluator):
     """Hàm đánh giá v1: Tính điểm vật chất kết hợp Bảng vị trí quân cờ (Piece-Square Tables) và Độ cơ động (Mobility)."""
 

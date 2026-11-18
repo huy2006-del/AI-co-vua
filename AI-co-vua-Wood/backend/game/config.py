@@ -1,7 +1,7 @@
 # game/config.py
 
 from dataclasses import dataclass
-from game.errors import InvalidConfigurationError
+from .errors import InvalidConfigurationError
 
 @dataclass
 class GameConfig:

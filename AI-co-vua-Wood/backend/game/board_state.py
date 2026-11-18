@@ -1,7 +1,7 @@
 # game/board_state.py
 
 import chess
-from game.errors import InvalidMoveError
+from .errors import InvalidMoveError
 
 class BoardState:
     def __init__(self, fen: str = None):

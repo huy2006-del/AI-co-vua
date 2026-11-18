@@ -1,7 +1,17 @@
 #!/bin/bash
 
-cd "$(dirname "$0")"
+ROOT="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+PYTHON="$ROOT/.venv/bin/python"
 
-export PYTHONPATH="$PWD/backend:$PYTHONPATH"
+if [ ! -x "$PYTHON" ]; then
+  python3 -m venv "$ROOT/.venv" || exit 1
+fi
 
-python3 cli.py "$@"
+"$PYTHON" -c 'import chess, pygame, pandas, matplotlib' >/dev/null 2>&1 || {
+  echo "Installing project dependencies..."
+  "$PYTHON" -m pip install -r "$ROOT/requirements.txt" || exit 1
+}
+
+cd "$ROOT/AI-co-vua-Wood" || exit 1
+export PYTHONPATH="$PWD/backend:$PWD${PYTHONPATH:+:$PYTHONPATH}"
+exec "$PYTHON" -m frontend.gui.app "$@"

@@ -221,7 +221,7 @@ class ChessApp:
                 else:
                     self.controller.play_computer(move)
                     if not isinstance(result, chess.Move):
-                        self.controller.stats[-1] = result
+                        self.controller.stats.append(result)
                     self.next_move_at = pygame.time.get_ticks() + 380
             except Exception as exc:
                 if action == "move":
